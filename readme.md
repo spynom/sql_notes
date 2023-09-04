@@ -96,4 +96,6 @@ Happy learning, and may your SQL journey be filled with success and knowledge!
 If you have any questions or suggestions, please don't hesitate to reach out.
 
 Best regards,
+
+
 [Mohit Kumar]
