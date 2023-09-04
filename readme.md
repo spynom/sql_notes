@@ -2,7 +2,7 @@
 
 # SQL Notes Repository
 
-Welcome to the SQL Notes Repository! This repository contains a collection of SQL-related materials, including notes, datasets, cheatsheets, and more, to help you learn and master SQL.
+Welcome to the SQL Notes Repository! This repository contains a collection of SQL-related materials, including notes, queries, datasets, cheatsheets, and more, to help you learn and master SQL.
 
 
 
