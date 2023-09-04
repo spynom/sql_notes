@@ -4,6 +4,16 @@
 
 Welcome to the SQL Notes Repository! This repository contains a collection of SQL-related materials, including notes, datasets, cheatsheets, and more, to help you learn and master SQL.
 
+
+
+Mostly it contains all the lectures, notes, tasks, cheatsheet shared and taught by **Nitish Singh** (http://learnwith.campusx.in/)
+
+**CampusX** github --> https://github.com/campusx-official
+
+Special Thanks to **Thoufiq** for his SQL Roadmap and teachings on some Advance SQL topics.
+
+Thoufiq's Youtube channel --> https://www.youtube.com/@techTFQ/
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -11,7 +21,6 @@ Welcome to the SQL Notes Repository! This repository contains a collection of SQ
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
@@ -87,7 +96,6 @@ Contributions are welcome! If you have SQL notes, additional datasets, useful ch
 6. Open a pull request to merge your changes into the main repository.
 
 Please make sure your contributions align with the repository's purpose and maintain a clear structure.
-
 
 ---
 
