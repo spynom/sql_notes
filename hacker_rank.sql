@@ -9282,7 +9282,19 @@ WHERE (cte2.c_created = (select MAX(cte2.c_created) from cte2)) OR cte2.total_co
 ORDER BY c_created DESC,hacker_id;
 ---------------------------------------------------------------------------------------------------------------
 
-
+with cte as (select hackers.hacker_id,hackers.name,submissions.challenge_id,submissions.submission_id,submissions.score,
+              ROW_NUMBER() OVER(PARTITION BY hackers.hacker_id,submissions.challenge_id ORDER BY submissions.score DESC) as rank_score
+              from hackers
+              RIGHT JOIN submissions 
+              ON hackers.hacker_id = submissions.hacker_id)
+              
+select hacker_id,name,
+SUM(score) as total_sum
+from cte
+WHERE cte.rank_score=1
+GROUP BY hacker_id,name
+HAVING SUM(score) > 0
+ORDER BY SUM(score) DESC,hacker_id;
 
 
 
