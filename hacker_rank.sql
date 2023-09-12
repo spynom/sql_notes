@@ -9284,18 +9284,66 @@ ORDER BY c_created DESC,hacker_id;
 
 with cte as (select hackers.hacker_id,hackers.name,submissions.challenge_id,submissions.submission_id,submissions.score,
               ROW_NUMBER() OVER(PARTITION BY hackers.hacker_id,submissions.challenge_id ORDER BY submissions.score DESC) as rank_score
-              from hackers
-              RIGHT JOIN submissions 
-              ON hackers.hacker_id = submissions.hacker_id)
+              from hackers3 as hackers
+              JOIN submissions2 as submissions
+              ON hackers.hacker_id = submissions.hacker_id),
+
+-- select hacker_id,name,score,challenge_id
+-- from cte
+-- WHERE rank_score = 1;
               
-select hacker_id,name,
-SUM(score) as total_sum
-from cte
-WHERE cte.rank_score=1
+cte2 as (select hacker_id,name,score,challenge_id from cte
+WHERE rank_score = 1)
+
+select hacker_id,name, 
+sum(score)
+from cte2
 GROUP BY hacker_id,name
-HAVING SUM(score) > 0
-ORDER BY SUM(score) DESC,hacker_id;
+HAVING sum(score)>0
+ORDER BY sum(score) DESC, hacker_id ASC;
+              
+CREATE TABLE projects (
+    task_id INT PRIMARY KEY,
+    start_date DATE,
+    end_date DATE
+);
 
+INSERT INTO projects (task_id, start_date, end_date)
+VALUES
+    (1, '2015-10-01', '2015-10-02'),
+    (24, '2015-10-02', '2015-10-03'),
+    (2, '2015-10-03', '2015-10-04'),
+    (23, '2015-10-04', '2015-10-05'),
+    (3, '2015-10-11', '2015-10-12'),
+    (22, '2015-10-12', '2015-10-13'),
+    (4, '2015-10-15', '2015-10-16'),
+    (21, '2015-10-17', '2015-10-18'),
+    (5, '2015-10-19', '2015-10-20'),
+    (20, '2015-10-21', '2015-10-22'),
+    (6, '2015-10-25', '2015-10-26'),
+    (19, '2015-10-26', '2015-10-27'),
+    (7, '2015-10-27', '2015-10-28'),
+    (18, '2015-10-28', '2015-10-29'),
+    (8, '2015-10-29', '2015-10-30'),
+    (17, '2015-10-30', '2015-10-31'),
+    (9, '2015-11-01', '2015-11-02'),
+    (16, '2015-11-04', '2015-11-05'),
+    (10, '2015-11-07', '2015-11-08'),
+    (15, '2015-11-06', '2015-11-07'),
+    (11, '2015-11-05', '2015-11-06'),
+    (14, '2015-11-11', '2015-11-12'),
+    (12, '2015-11-12', '2015-11-13'),
+    (13, '2015-11-17', '2015-11-18');
 
+with cte as(select *,
+datediff(start_date,lag_end_date) as diff_lag_end_date,
+datediff(start_date,lead_end_date) as diff_lead_end_date
+from (select *,
+LAG(end_date) OVER() as lag_end_date,
+LEAD(end_date) OVER() as lead_end_date from projects
+ORDER by start_date) as t)
+
+select * from cte
+WHERE diff_lag_end_date = 0 OR diff_lead_end_date=-2;
 
 
