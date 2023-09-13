@@ -9335,15 +9335,47 @@ VALUES
     (12, '2015-11-12', '2015-11-13'),
     (13, '2015-11-17', '2015-11-18');
 
-with cte as(select *,
-datediff(start_date,lag_end_date) as diff_lag_end_date,
-datediff(start_date,lead_end_date) as diff_lead_end_date
-from (select *,
-LAG(end_date) OVER() as lag_end_date,
-LEAD(end_date) OVER() as lead_end_date from projects
-ORDER by start_date) as t)
-
-select * from cte
-WHERE diff_lag_end_date = 0 OR diff_lead_end_date=-2;
 
 
+select * from projects;
+
+with cte as (select *,
+lead(end_date) over() as lead_end,
+lead(end_date) over() - start_date as diff
+from projects)
+
+select *, 
+dense_rank() over(partition by diff order by start_date asc)
+from cte
+order by start_date
+;
+
+
+	with cte as (SELECT
+	CASE WHEN occupation = 'Doctor' THEN name ELSE 'zzz' END Doctor,
+	CASE WHEN occupation = 'Professor' THEN name ELSE 'zzz' END Professor,
+	CASE WHEN occupation = 'Singer' THEN name ELSE 'zzz' END Singer,
+	CASE WHEN occupation = 'Actor' THEN name ELSE 'zzz' END Actor,
+  row_number() over() as rn
+	FROM occupation
+ORDER BY Doctor ASC),
+
+cte2 as (select rn,Doctor,t2.Professor,t3.Singer,t4.Actor
+from cte
+JOIN
+(select Professor,
+row_number() over(order by Professor) as rn_2
+from cte) as t2
+ON cte.rn=t2.rn_2
+JOIN
+(select Singer,
+row_number() over(order by Singer) as rn_3
+from cte) as t3
+ON cte.rn=t3.rn_3
+JOIN
+(select Actor,
+row_number() over(order by Actor) as rn_4
+from cte) as t4
+ON cte.rn=t4.rn_4
+)
+select * from cte2;
