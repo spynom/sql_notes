@@ -9381,6 +9381,48 @@ ON cte.rn=t4.rn_4
 select * from cte2
 where Professor!='zzz';
 
+---------------------------------------------------
+
+WITH cte AS (
+    SELECT
+        CASE WHEN occupation = 'Doctor' THEN name ELSE 'zzz' END AS Doctor,
+        CASE WHEN occupation = 'Professor' THEN name ELSE 'zzz' END AS Professor,
+        CASE WHEN occupation = 'Singer' THEN name ELSE 'zzz' END AS Singer,
+        CASE WHEN occupation = 'Actor' THEN name ELSE 'zzz' END AS Actor,
+        ROW_NUMBER() OVER () AS rn
+    FROM occupations
+    ORDER BY Doctor ASC
+),
+cte2 AS (
+    SELECT rn, Doctor, t2.Professor, t3.Singer, t4.Actor
+    FROM cte
+    JOIN (
+        SELECT Professor, ROW_NUMBER() OVER (ORDER BY Professor) AS rn_2
+        FROM cte
+    ) AS t2 ON cte.rn = t2.rn_2
+    JOIN (
+        SELECT Singer, ROW_NUMBER() OVER (ORDER BY Singer) AS rn_3
+        FROM cte
+    ) AS t3 ON cte.rn = t3.rn_3
+    JOIN (
+        SELECT Actor, ROW_NUMBER() OVER (ORDER BY Actor) AS rn_4
+        FROM cte
+    ) AS t4 ON cte.rn = t4.rn_4
+)
+
+SELECT
+    CASE WHEN Doctor = 'zzz' THEN NULL ELSE Doctor END AS Doctor,
+    CASE WHEN Professor = 'zzz' THEN NULL ELSE Professor END AS Professor,
+    CASE WHEN Singer = 'zzz' THEN NULL ELSE Singer END AS Singer,
+    CASE WHEN Actor = 'zzz' THEN NULL ELSE Actor END AS Actor
+FROM cte2
+WHERE Professor != 'zzz';
+
+
+---------------------------------------------------
+
+
+
 
 
 -- Create the table
@@ -9408,5 +9450,31 @@ where Professor!='zzz';
 -- (11, 15),
 -- (15, NULL);
 
+select * from bst;
+
+with cte as (select t1.*,t2.P as grand_parent,
+CASE
+WHEN t1.N = ANY (select P from BST) THEN 'Inner'
+WHEN t1.N!= ANY (select P from BST) THEN 'Leaf'
+END 'level'
+from BST as t1
+JOIN BST as t2
+ON t1.P = t2.N)
 
 
+select * from (select N,level
+from cte
+UNION 
+select P,
+CASE
+WHEN grand_parent IS NULL THEN 'Root' 
+END 'level'
+from cte) as t1
+WHERE t1.level IS NOT NULL
+ORDER BY t1.N;
+
+
+select * from regex_test;
+
+select * from regex_test
+WHERE text_data REGEXP 'aei*';
