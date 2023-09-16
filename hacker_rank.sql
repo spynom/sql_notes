@@ -9452,29 +9452,12 @@ WHERE Professor != 'zzz';
 
 select * from bst;
 
-with cte as (select t1.*,t2.P as grand_parent,
-CASE
-WHEN t1.N = ANY (select P from BST) THEN 'Inner'
-WHEN t1.N!= ANY (select P from BST) THEN 'Leaf'
-END 'level'
-from BST as t1
-JOIN BST as t2
-ON t1.P = t2.N)
+SELECT N,
+  CASE
+    WHEN P IS NULL THEN 'Root'
+    WHEN N IN (SELECT P FROM BST) THEN 'Inner'
+    ELSE 'Leaf'
+  END
+FROM BST ORDER BY N;
 
 
-select * from (select N,level
-from cte
-UNION 
-select P,
-CASE
-WHEN grand_parent IS NULL THEN 'Root' 
-END 'level'
-from cte) as t1
-WHERE t1.level IS NOT NULL
-ORDER BY t1.N;
-
-
-select * from regex_test;
-
-select * from regex_test
-WHERE text_data REGEXP 'aei*';
