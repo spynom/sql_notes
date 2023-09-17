@@ -22,4 +22,15 @@ select *, format_date(DOB) from persons;
 
 select flights_count('Banglore','New Delhi');
 
+################################################ STORED PROCEDURE #################################
+SET @message = '';
+CALL add_user('mkr','mkru898',@message);
+
+SELECT @message;
+select * from users;
+
+CALL user_orders('daniel.wilson@example.com');
+
+
+
 
